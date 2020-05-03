@@ -1,6 +1,6 @@
+.idea
 .git
-.gitignore
-auto/
-result/
-.idea/
+auto
+result
 README.md
+.gitignore
