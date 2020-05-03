@@ -1,11 +1,6 @@
 #!/bin/bash -e
-
 cd $(dirname $0)/..
 STACK_NAME=test-kms-stack
-
-ENV=$(echo ${ENV:-${1:-"test"}} | tr '[A-Z]' '[a-z]')
-
-AWS_REGION=${2:-ap-southeast-2}
 
 _usage() {
 	echo "No enough args!!!"
@@ -50,6 +45,8 @@ _wait_until_complete() {
 }
 
 [[ $# -lt 1 ]] && _usage && exit 1
+ENV=$(echo ${ENV:-${1:-"test"}} | tr '[A-Z]' '[a-z]')
+AWS_REGION=${2:-ap-southeast-2}
 
 _stack_exists && ACTION="update" || ACTION="create"
 
