@@ -1,0 +1,69 @@
+#!/bin/bash -e
+
+cd $(dirname $0)/..
+STACK_NAME=test-kms-stack
+
+ENV=$(echo ${ENV:-${1:-"test"}} | tr '[A-Z]' '[a-z]')
+
+AWS_REGION=${2:-ap-southeast-2}
+
+_usage() {
+	echo "No enough args!!!"
+	echo "Usage: ./$0 ENV [AWS_REGION]"
+	exit 1
+}
+
+_stack_status() {
+	status=$(
+		aws cloudformation describe-stacks \
+			--stack-name "${STACK_NAME}" \
+			--query 'Stacks[]["StackStatus"][]' \
+			--output text \
+			2>/dev/null
+	)
+	[[ -z "${status}" ]] && return 1
+	echo "${status}"
+}
+
+_stack_output() {
+	status=$(
+		aws cloudformation describe-stacks \
+			--stack-name "${STACK_NAME}" \
+			--query 'Stacks[][Outputs]' \
+			--output table \
+			2>/dev/null
+	)
+	[[ -z "${status}" ]] && return 1
+	echo "${status}"
+}
+
+_stack_exists() {
+	[[ ! -z "$(_stack_status)" ]]
+	return $?
+}
+
+_wait_until_complete() {
+	[[ $(_stack_status) =~ COMPLETE$ ]] && exit 0
+	aws cloudformation wait stack-${ACTION}-complete \
+		--stack-name "${STACK_NAME}" \
+		&>/dev/null
+}
+
+[[ $# -lt 1 ]] && _usage && exit 1
+
+_stack_exists && ACTION="update" || ACTION="create"
+
+if [[ ! $(_stack_status) =~ IN_PROGRESS$ ]]; then
+	aws cloudformation ${ACTION}-stack \
+		--stack-name ${STACK_NAME} \
+		--template-body file://deployment/kms/template.json \
+		--parameters file://deployment/kms/${ENV}.json \
+		--region ${AWS_REGION} \
+		--output json \
+		&>/dev/null
+fi
+
+echo "Waiting for stack to ${ACTION}"
+_wait_until_complete
+
+_stack_output

@@ -1,0 +1,13 @@
+#! /bin/bash -ex
+cd $(dirname $0)/..
+
+IMAGE_NAME=test-sns-topic
+CONTAINER_NAME=test-sns-topic-package
+
+docker build -t $IMAGE_NAME .
+rm -rf ./dist
+docker run --rm \
+    -v "$(pwd)"/dist:/dist \
+    -e NODE_ENV=production \
+    --name $CONTAINER_NAME $IMAGE_NAME:latest \
+    sh -c "yarn install && cp -r /app/. /dist"

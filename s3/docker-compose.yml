@@ -1,0 +1,10 @@
+version: '3'
+services:
+  localstack-sqs:
+    environment:
+      DEFAULT_REGION: ap-southeast-2
+      SERVICES: s3:4572,cloudformation:4581
+    image: localstack/localstack:0.8.6
+    ports:
+      - "0.0.0.0:4572:4572"
+      - "0.0.0.0:4581:4581"

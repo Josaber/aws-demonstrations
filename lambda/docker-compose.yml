@@ -1,0 +1,30 @@
+version: '3'
+services:
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ['yarn', 'test']
+
+  style:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ['yarn', 'style']
+
+  deploy:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: []
+
+  localstack-lambda:
+    environment:
+      HOSTNAME: localhost
+      DEFAULT_REGION: ap-southeast-2
+      SERVICES: s3:4572,lambda:4574,cloudformation:4581
+    image: localstack/localstack:0.8.6
+    ports:
+      - "0.0.0.0:4572:4572"
+      - "0.0.0.0:4574:4574"
+      - "0.0.0.0:4581:4581"

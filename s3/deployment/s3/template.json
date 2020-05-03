@@ -1,0 +1,21 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "An S3 Bucket for testing",
+  "Parameters": {
+    "BucketName": {
+      "Default": "",
+      "Description": "S3 bucket name",
+      "Type": "String"
+    }
+  },
+  "Resources": {
+    "TestBucket": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketName": {
+          "Ref": "BucketName"
+        }
+      }
+    }
+  }
+}

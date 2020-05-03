@@ -1,0 +1,54 @@
+#!/bin/bash -e
+
+cd $(dirname $0)/..
+
+LAMBDA_STACK_NAME="test-lambda-stack"
+PREFIX="test-lambda"
+
+ENV=$(echo ${ENV:-${1:-"test"}} | tr '[A-Z]' '[a-z]')
+AWS_DEFAULT_REGION=${2:-ap-southeast-2}
+
+_stack_status() {
+	status=$(
+		aws cloudformation describe-stacks \
+			--stack-name "${LAMBDA_STACK_NAME}" \
+			--query 'Stacks[]["StackStatus"][]' \
+			--output text
+	)
+	[[ -z "${status}" ]] && return 1
+	echo "${status}"
+}
+
+_stack_output() {
+	status=$(
+		aws cloudformation describe-stacks \
+			--stack-name "${LAMBDA_STACK_NAME}" \
+			--query 'Stacks[][Outputs]' \
+			--output table
+	)
+	[[ -z "${status}" ]] && return 1
+	echo "${status}"
+}
+
+_wait_until_complete() {
+	[[ $(_stack_status) =~ COMPLETE$ ]] && exit 0
+	aws cloudformation wait stack-${ACTION}-complete \
+		--stack-name "${LAMBDA_STACK_NAME}"
+}
+
+aws cloudformation package \
+	--template-file deployment/lambda/template.json \
+	--output-template-file generated-template.yml \
+	--s3-bucket ${BUCKET_NAME_TEST} \
+	--s3-prefix ${PREFIX}
+
+aws cloudformation deploy \
+    --stack-name ${LAMBDA_STACK_NAME} \
+    --template-file generated-template.yml \
+    --parameter-overrides file://deployment/lambda/${ENV}.conf \
+    --region ${AWS_DEFAULT_REGION} \
+    --capabilities CAPABILITY_IAM \
+    --output json
+
+_wait_until_complete
+_stack_output

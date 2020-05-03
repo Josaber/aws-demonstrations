@@ -1,0 +1,52 @@
+{
+  "name": "test-sns-topic",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:Josaber/sns-sqs-lambda-demo.git",
+  "author": "Josaber",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "node index.js",
+    "test": "./node_modules/.bin/jest",
+    "eslint": "./node_modules/.bin/eslint ./index.js ./src/** ./test/**"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "aws-sdk": "^2.344.0",
+    "eslint": "^5.8.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-node": "^8.0.0",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "jest": "^23.6.0"
+  },
+  "eslintConfig": {
+    "extends": "standard",
+    "env": {
+      "node": true,
+      "es6": true,
+      "jest": true
+    }
+  },
+  "jest": {
+    "coverageThreshold": {
+      "global": {
+        "branches": 100,
+        "functions": 100,
+        "lines": 100,
+        "statements": 100
+      }
+    },
+    "testMatch": [
+      "<rootDir>/test/**/*.test.js",
+      "<rootDir>/test/*.test.js"
+    ],
+    "coverageReporters": [
+      "text-summary",
+      "lcov"
+    ],
+    "testEnvironment": "node"
+  }
+}

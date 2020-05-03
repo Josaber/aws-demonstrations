@@ -1,0 +1,33 @@
+#! /bin/bash -ev
+
+cd $(dirname $0)/..
+
+if [[ $# -lt 3 ]]; then
+	echo "No enough args!"
+	echo "Usage: $0 ENV START_DATE END_DATE TYPE"
+	echo "  ENV:         Environment flag, should be one of test, staging or prod,"
+	echo "  START_DATE:  Survey start date (include, format: 2017-10-20),"
+	echo "  END_DATE:    Survey end date (exclude, format: 2017-11-20)."
+	exit 1
+fi
+
+# Build the image
+docker build -t athena-test .
+echo ">>> Finished Building docker image athena-test with tag latest <<<"
+
+ENV=$(echo ${1:-"test"} | tr "a-z" "A-Z")
+
+# Run the container
+docker run \
+    --rm \
+    -i \
+    -v $(pwd)/result:/app/result \
+    -e ENV=${ENV} \
+    -e START_DATE=$2 \
+    -e END_DATE=$3 \
+    -e AWS_ACCESS_KEY_ID \
+    -e AWS_SECRET_ACCESS_KEY \
+    -e AWS_SECURITY_TOKEN \
+    -e AWS_SESSION_TOKEN \
+    --name athena-test-local \
+    athena-test

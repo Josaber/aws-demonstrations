@@ -1,0 +1,2 @@
+BUCKET_test="test-bucket"
+BUCKET_prod="production-bucket"

@@ -1,0 +1,34 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+  "Description" : "AWS CloudFormation Template SQS_With_CloudWatch_Alarms.",
+
+  "Parameters" : {
+    "MyQueueName": {
+      "Default": "TestQueue",
+      "Description": "Queue name",
+      "Type": "String"
+    }
+  },
+  "Resources" : {
+    "MyTestQueue" : {
+      "Type" : "AWS::SQS::Queue",
+      "Properties" : {
+        "QueueName" : { "Ref": "MyQueueName" },
+      }
+    }
+  },
+  "Outputs" : {
+    "QueueURL" : {
+      "Description" : "URL of newly created SQS Queue",
+      "Value" : { "Ref" : "MyTestQueue" }
+    },
+    "QueueARN" : {
+      "Description" : "ARN of newly created SQS Queue",
+      "Value" : { "Fn::GetAtt" : ["MyTestQueue", "Arn"]}
+    },
+    "QueueName" : {
+      "Description" : "Name newly created SQS Queue",
+      "Value" : { "Fn::GetAtt" : ["MyTestQueue", "QueueName"]}
+    }
+  }
+}

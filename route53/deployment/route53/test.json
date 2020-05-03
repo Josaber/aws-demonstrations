@@ -1,0 +1,14 @@
+[
+  {
+    "ParameterKey": "TestRoute53DNSName",
+    "ParameterValue": "<Internal-Load-Balancer-Address>"
+  },
+  {
+    "ParameterKey": "TestRoute53ZoneID",
+    "ParameterValue": "<Zone-ID>"
+  },
+  {
+    "ParameterKey": "HostedZoneName",
+    "ParameterValue": "domain.com."
+  }
+]

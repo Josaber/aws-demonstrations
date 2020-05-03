@@ -1,0 +1,18 @@
+[
+  {
+    "ParameterKey": "QueuePrincipal",
+    "ParameterValue": "arn:aws:iam::account-id:root"
+  },
+  {
+    "ParameterKey": "VpcId",
+    "ParameterValue": "vpc-id"
+  },
+  {
+    "ParameterKey": "SubnetId1",
+    "ParameterValue": "subnet-id"
+  },
+  {
+    "ParameterKey": "SubnetId2",
+    "ParameterValue": "subnet-id"
+  }
+]

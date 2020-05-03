@@ -1,0 +1,38 @@
+#!/bin/bash -e
+
+cd $(dirname $0)/..
+
+if [[ $# -lt 1 ]]; then
+	echo "No enough args!"
+	echo "Usage: $0 ENCRYPTED_MESSAGE|KEY_FILE [id]"
+	echo "  ENCRYPTED_MESSAGE|KEY_FILE: Encrypted content or KeyFile."
+	echo "  id: Optional parameter, if this is set, it will show the keyid of the encrypted message as well."
+	exit 1
+fi
+
+TMPFILE=$(mktemp)
+QUERY="Plaintext"
+trap 'rm -f -- "${TMPFILE}"' INT TERM HUP EXIT
+
+if [ ! -e $1 ]; then
+	echo "Did not detect such file '$1', will treat it as encrypted message."
+	echo $1 | base64 --decode >${TMPFILE}
+else
+	echo "Found file '$1'."
+	file $1 | grep 'ASCII'
+	if [[ $? -eq 0 ]]; then
+		echo "Detected file are plain text, will base64 decode before decrypt."
+		cat $1 | base64 --decode >${TMPFILE}
+	fi
+	file $1 | grep 'PDP-11'
+	if [[ $? -eq 0 ]]; then
+		echo "Detected file has already been decoded."
+		cp $1 ${TMPFILE}
+	fi
+fi
+
+if [[ $2 != "" ]]; then
+	aws kms decrypt --ciphertext-blob fileb://${TMPFILE} --output text --query KeyId
+fi
+
+aws kms decrypt --ciphertext-blob fileb://${TMPFILE} --output text --query Plaintext | base64 --decode

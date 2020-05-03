@@ -1,0 +1,29 @@
+#!/bin/bash -e
+
+cd $(dirname $0)/..
+
+source ./deployment/key-arns.conf
+
+TEXT=""
+
+if [[ $# -lt 2 ]]; then
+	echo "No enough args!"
+	echo "Usage: $0 ENV TOKEN|KEY_FILE"
+	echo "  ENV: Environment flag, should be one of test and prod,"
+	echo "  TOKEN|KEY_FILE: Token or KeyFile."
+	exit 1
+fi
+
+if [ ! -e $2 ]; then
+	echo "Did not detect such file '$2', will treat it as plain text."
+	TEXT=$2
+else
+	echo "Found file '$2', will encrypt the file."
+	TEXT="fileb://$2"
+fi
+
+ENV=$(echo ${1:-"test"} | tr "a-z" "A-Z")
+
+KEY="${ENV}_KMS_KEY_ARN"
+
+aws kms encrypt --key-id ${!KEY} --plaintext ${TEXT} --output text --query CiphertextBlob

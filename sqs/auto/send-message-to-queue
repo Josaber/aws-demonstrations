@@ -1,0 +1,18 @@
+#! /bin/bash -ev
+cd $(dirname $0)/..
+
+_usage() {
+	echo "No enough args!!!"
+	echo "Usage: ./$0 MESSAGE [AWS_REGION]"
+	exit 1
+}
+
+[[ $# -lt 1 ]] && _usage && exit 1
+
+AWS_ACCESS_KEY_ID=test-access-key-id \
+AWS_SECRET_ACCESS_KEY=test-secret-key \
+AWS_SECURITY_TOKEN=test-security-token \
+AWS_SESSION_TOKEN=test-session-token \
+AWS_REGION=${2:-ap-southeast-2} \
+aws --endpoint-url=http://localhost:4576 \
+  sqs send-message --queue-url http://localhost:4576/queue/TestParamQueueName --message-body $1 --delay-seconds 10
