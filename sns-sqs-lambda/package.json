@@ -2,10 +2,10 @@
   "name": "test-sns-topic",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "git@github.com:Josaber/sns-sqs-lambda-demo.git",
+  "repository": "git@github.com:Josaber/aws-demonstrations.git",
   "author": "Josaber",
   "license": "MIT",
-  "private": true,
+  "private": false,
   "scripts": {
     "start": "node index.js",
     "test": "./node_modules/.bin/jest",

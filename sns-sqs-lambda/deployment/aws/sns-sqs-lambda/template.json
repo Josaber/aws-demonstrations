@@ -200,8 +200,8 @@
             "Arn"
           ]
         },
-        "Runtime": "nodejs8.10",
-        "Timeout": "300",
+        "Runtime": "nodejs12.x",
+        "Timeout": "900",
         "Tags": [
           {
             "Key": "contact",
