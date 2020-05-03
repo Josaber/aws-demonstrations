@@ -1,7 +1,7 @@
-# AWS S3 Example
+# AWS S3 Demonstration
 
 * **Date:** 2018-06-16
-* **Author:** https://github.com/Josaber
+* **Author:** [Josaber](https://github.com/Josaber)
 
 ## Project Overview
 
