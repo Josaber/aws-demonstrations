@@ -1,5 +1,4 @@
 #!/usr/bin/env bash -e
-
 cd $(dirname $0)/..
 
 _usage() {
