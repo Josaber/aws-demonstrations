@@ -1,0 +1,21 @@
+#! /bin/bash -e
+#
+# packages freshness
+
+CONTAINER_NAME=test-sns-topic-check-packages
+
+OUTDATED=$(docker run --rm \
+  -v $(pwd):/app \
+  -e NODE_ENV=test \
+  --name $CONTAINER_NAME node:8.11.3-alpine \
+  sh -c "cd /app && yarn outdated | grep 'dependencies' | wc -l")
+
+# Default threshold for stale packages
+MAX_STALE=10
+
+if [ "$OUTDATED" -gt "$MAX_STALE" ]; then
+  echo "You have too many outdated packages: ${OUTDATED} outdated packages. Threshold is ${MAX_STALE}." >&2
+  exit 1
+else
+  echo "Packages freshness ok. ${OUTDATED} outdated packages. Threshold is ${MAX_STALE}."
+fi

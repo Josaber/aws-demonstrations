@@ -1,0 +1,6 @@
+[
+  {
+    "ParameterKey": "MyQueueName",
+    "ParameterValue": "TestParamQueueName"
+  }
+]

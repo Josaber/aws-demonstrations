@@ -1,0 +1,15 @@
+#!/bin/bash -evu
+cd $(dirname $0)/..
+
+if [[ $# -lt 2 ]]; then
+	echo "No enough args!"
+	echo "Usage: $0 START_DATE END_DATE ENV"
+	echo "  START_DATE:  Start date (include, format: 2017-10-20),"
+	echo "  END_DATE:    End date (exclude, format: 2017-11-20)."
+	echo "  ENV:         Environment flag, should be one of test, staging or prod,"
+	exit 1
+fi
+
+bundle install
+ENV=$(echo ${3:-"test"} | tr "a-z" "A-Z")
+ENV=${ENV} START_DATE=$1 END_DATE=$2 ruby main.rb

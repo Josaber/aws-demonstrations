@@ -1,0 +1,151 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "",
+  "Parameters": {
+    "KeyName": {
+      "Type": "String"
+    },
+    "UsageDescription": {
+      "Type": "String"
+    },
+    "RootRoleArn": {
+      "Type": "String"
+    },
+    "AdminRoleArn": {
+      "Type": "String"
+    },
+    "UserRoleArn": {
+      "Default": "*",
+      "Type": "String"
+    }
+  },
+  "Resources": {
+    "KeyAlias": {
+      "Type": "AWS::KMS::Alias",
+      "Properties": {
+        "AliasName": {
+          "Fn::Join": [
+            "/",
+            [
+              "alias",
+              {
+                "Ref": "KeyName"
+              }
+            ]
+          ]
+        },
+        "TargetKeyId": {
+          "Ref": "TestKmsKey"
+        }
+      }
+    },
+    "TestKmsKey": {
+      "Type": "AWS::KMS::Key",
+      "Properties": {
+        "Description": {
+          "Ref": "UsageDescription"
+        },
+        "Enabled": true,
+        "EnableKeyRotation": false,
+        "KeyPolicy": {
+          "Id": "key-policy",
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "Enable IAM User Permissions",
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": [
+                  {
+                    "Ref": "RootRoleArn"
+                  }
+                ]
+              },
+              "Action": [
+                "kms:*"
+              ],
+              "Resource": "*"
+            },
+            {
+              "Sid": "Allow access for Key Administrators",
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": [
+                  {
+                    "Ref": "AdminRoleArn"
+                  }
+                ]
+              },
+              "Action": [
+                "kms:Create*",
+                "kms:Describe*",
+                "kms:Enable*",
+                "kms:List*",
+                "kms:Put*",
+                "kms:Update*",
+                "kms:Revoke*",
+                "kms:Disable*",
+                "kms:Get*",
+                "kms:Delete*",
+                "kms:TagResource",
+                "kms:UntagResource",
+                "kms:ScheduleKeyDeletion",
+                "kms:CancelKeyDeletion"
+              ],
+              "Resource": "*"
+            },
+            {
+              "Sid": "Allow use of the key",
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": [
+                  {
+                    "Ref": "UserRoleArn"
+                  }
+                ]
+              },
+              "Action": [
+                "kms:Encrypt",
+                "kms:Decrypt",
+                "kms:ReEncrypt*",
+                "kms:GenerateDataKey*",
+                "kms:DescribeKey"
+              ],
+              "Resource": "*"
+            },
+            {
+              "Sid": "Allow attachment of persistent resources",
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": [
+                  {
+                    "Ref": "UserRoleArn"
+                  }
+                ]
+              },
+              "Action": [
+                "kms:CreateGrant",
+                "kms:ListGrants",
+                "kms:RevokeGrant"
+              ],
+              "Resource": "*",
+              "Condition": {
+                "Bool": {
+                  "kms:GrantIsForAWSResource": true
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "Outputs": {
+    "kmsKeyId": {
+      "Description": "The ID of the KMS key",
+      "Value": {
+        "Ref": "TestKmsKey"
+      }
+    }
+  }
+}

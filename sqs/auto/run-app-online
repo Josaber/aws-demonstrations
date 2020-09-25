@@ -1,0 +1,6 @@
+#! /bin/bash -ev
+cd $(dirname $0)/..
+
+NODE_ENV=production \
+  AWS_REGION=${1:-ap-southeast-2} \
+  yarn start

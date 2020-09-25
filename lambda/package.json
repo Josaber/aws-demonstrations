@@ -1,0 +1,28 @@
+{
+  "name": "lambda-demonstration",
+  "version": "1.0.0",
+  "description": "AWS Lambda Demonstration",
+  "main": "index.js",
+  "repository": "git@github.com:Josaber/aws-demonstrations.git",
+  "author": "younever4ever@gmail.com",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "eslint": "eslint .",
+    "test": "jest",
+    "local": "node index.local.js"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn eslint && yarn test"
+    }
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "aws-sdk": "^2.645.0",
+    "eslint": "^6.8.0",
+    "husky": "^4.2.3",
+    "jest": "^25.1.0"
+  }
+}

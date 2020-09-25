@@ -1,0 +1,4 @@
+#!/bin/bash -ev
+cd $(dirname $0)/..
+
+exec docker-compose run --rm style

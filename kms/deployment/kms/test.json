@@ -1,0 +1,18 @@
+[
+  {
+    "ParameterKey": "KeyName",
+    "ParameterValue": "test-kms-key-name"
+  },
+  {
+    "ParameterKey": "UsageDescription",
+    "ParameterValue": "This key is used for testing."
+  },
+  {
+    "ParameterKey": "RootRoleArn",
+    "ParameterValue": "arn:aws:iam::<account-id>:root"
+  },
+  {
+    "ParameterKey": "AdminRoleArn",
+    "ParameterValue": "arn:aws:iam::<account-id>:role/<role-name>"
+  }
+]

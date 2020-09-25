@@ -1,0 +1,55 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "DNS Stack for testing Route53",
+  "Parameters": {
+    "HostedZoneName": {
+      "Description": "Domain or Zone in which the DNS records will be created.",
+      "Type": "String"
+    },
+    "TestRoute53Record": {
+      "Description": "Create ALIAS record for internal ELB.",
+      "Type": "String",
+      "Default": "test.route53.com"
+    },
+    "TestRoute53DNSName": {
+      "Description": "Test DNS Name",
+      "Type": "String"
+    },
+    "TestRoute53ZoneID": {
+      "Description": "Your DNSZoneNameID",
+      "Type": "String"
+    }
+  },
+
+  "Resources": {
+    "TestRoute53": {
+      "Type": "AWS::Route53::RecordSet",
+      "Properties": {
+        "HostedZoneName": {
+          "Ref": "HostedZoneName"
+        },
+        "Name": {
+          "Fn::Join": [
+            "", [{
+              "Ref": "TestRoute53Record"
+            },
+              ".",
+              {
+                "Ref": "HostedZoneName"
+              }
+            ]
+          ]
+        },
+        "Type": "A",
+        "AliasTarget": {
+          "HostedZoneId": {
+            "Ref": "TestRoute53ZoneID"
+          },
+          "DNSName": {
+            "Ref": "TestRoute53DNSName"
+          }
+        }
+      }
+    }
+  }
+}

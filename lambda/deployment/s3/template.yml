@@ -1,0 +1,14 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: An S3 Bucket for storing lambda
+
+Parameters:
+  BucketName:
+    Description: The S3 bucket name for deploying lambda.
+    Default: "deploy-lambda-bucket"
+    Type: String
+
+Resources:
+  LambdaBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref BucketName

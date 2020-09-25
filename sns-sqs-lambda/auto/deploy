@@ -1,0 +1,32 @@
+#! /bin/bash -ex
+cd $(dirname $0)/..
+
+ENV=$(echo ${ENV:-${1:-"test"}} | tr '[A-Z]' '[a-z]')
+
+source ./auto/build-app
+
+ORIGINAL_TEMPLATE_PATH=./deployment/aws/sns-sqs-lambda/template.json
+COMPILED_TEMPLATE_PATH=./deployment/aws/sns-sqs-lambda/compiled-template.json
+PARAMETER_PATH=./deployment/aws/sns-sqs-lambda/${ENV}.conf
+
+BUILD_NUMBER=${BUILDKITE_BUILD_NUMBER:-0}
+GIT_HASH=$(echo ${BUILDKITE_COMMIT:-XXXXXXX} | cut -c -7)
+BUILD_VERSION="${GIT_HASH}.${BUILD_NUMBER}"
+
+source ./auto/set-vars
+BUCKET="BUCKET_${ENV}"
+
+aws cloudformation package \
+  --template-file $ORIGINAL_TEMPLATE_PATH \
+  --output-template-file $COMPILED_TEMPLATE_PATH \
+  --s3-bucket ${!BUCKET} \
+  --s3-prefix test-sns-sqs-lambda \
+  --use-json
+
+aws cloudformation deploy \
+  --region ap-southeast-2 \
+  --stack-name test-sns-sqs-lambda \
+  --template-file $COMPILED_TEMPLATE_PATH \
+  --parameter-overrides file://$PARAMETER_PATH \
+  --tags version=${BUILD_VERSION} \
+  --capabilities CAPABILITY_IAM

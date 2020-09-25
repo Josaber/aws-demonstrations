@@ -1,0 +1,17 @@
+version: '3'
+services:
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    command: ['yarn', 'test']
+
+  style:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    command: ['yarn', 'eslint']
