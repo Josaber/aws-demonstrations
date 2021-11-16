@@ -13,7 +13,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "aws-sdk": "^2.344.0",
+    "aws-sdk": "^2.814.0",
     "eslint": "^5.8.0",
     "eslint-config-standard": "^12.0.0",
     "eslint-plugin-import": "^2.14.0",
